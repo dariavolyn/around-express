@@ -8,7 +8,8 @@ router.get('/', (req, res) => {
   const usersPath = path.join(__dirname, '../data/users.json');
 
   fs.readFile(usersPath, { encoding: 'utf8' })
-    .then((data) => res.status(200).send(JSON.parse(data)));
+    .then((data) => res.status(200).send(JSON.parse(data)))
+    .catch(() => res.status(500));
 });
 
 router.get('/:id', (req, res) => {
@@ -16,12 +17,11 @@ router.get('/:id', (req, res) => {
 
   fs.readFile(usersPath, { encoding: 'utf8' })
     .then((data) => {
-      const user = JSON.parse(data).find(() => user._id === req.params.id);
-      if (!user) {
-        res.status(404).send({ message: 'User ID not found' });
-      }
+      const info = JSON.parse(data);
+      const user = info.filter((item) => item._id === req.params.id);
       res.send(user);
-    });
+    })
+    .catch(() => res.status(500));
 });
 
 module.exports = router;
