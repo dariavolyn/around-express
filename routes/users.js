@@ -19,7 +19,11 @@ router.get('/:id', (req, res) => {
     .then((data) => {
       const info = JSON.parse(data);
       const user = info.filter((item) => item._id === req.params.id);
-      res.send(user);
+      if (user.length === 0) {
+        res.status(404).send({ message: 'User ID not found' });
+      } else {
+        res.send(user);
+      }
     })
     .catch(() => res.status(500));
 });
