@@ -5,7 +5,7 @@ module.exports.getUsers = (req, res) => {
     .then((data) => { res.send(data); })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -20,7 +20,7 @@ module.exports.createUser = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -35,7 +35,7 @@ module.exports.getProfile = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -44,11 +44,11 @@ module.exports.getProfile = (req, res) => {
 module.exports.patchUser = (req, res) => {
   const { name, about } = req.body;
 
-  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
+  return User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -57,11 +57,11 @@ module.exports.patchUser = (req, res) => {
 module.exports.patchAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
+  return User.findByIdAndUpdate(req.user._id, { avatar }, { new: true, runValidators: true })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });

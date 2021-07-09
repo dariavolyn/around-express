@@ -5,7 +5,7 @@ module.exports.getCards = (req, res) => {
     .then((data) => { res.send(data); })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -24,7 +24,7 @@ module.exports.createCard = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -39,7 +39,7 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -58,7 +58,7 @@ module.exports.addLike = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
@@ -77,7 +77,7 @@ module.exports.dislikeCard = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'Bad Request') {
+      if (err.name === 'CastError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
