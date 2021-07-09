@@ -14,6 +14,15 @@ mongoose.connect('mongodb://localhost:27017/aroundb', {
   useUnifiedTopology: true,
 });
 
+app.use(express.json());
+app.use((req, res, next) => {
+  req.user = {
+    _id: '60e656cb5fefd81bf4db9a71',
+  };
+
+  next();
+});
+
 app.use('/users', usersRouter);
 app.use('/cards', cardsRouter);
 

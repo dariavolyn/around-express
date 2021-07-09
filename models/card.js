@@ -11,22 +11,18 @@ const cardSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (v) => {
-        const regexp = /^([http://]|[https://])[www.]?[.~:/?%#[\]@!$&'()*+,;=\w]+#?$/gm;
-
-        return v.test(regexp);
+        const regexp = /^[http://]|[https://][www.]?[.~:/?%#[\]@!$&'()*+,;=\w]+#?$/gm;
+        return regexp.test(v);
       },
     },
     required: true,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'owner',
     required: true,
   },
   likes: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'likes',
-    default: [],
   },
   createdAt: {
     type: Date,
@@ -34,4 +30,4 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.module('card', cardSchema);
+module.exports = mongoose.model('card', cardSchema);
