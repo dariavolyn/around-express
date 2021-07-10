@@ -24,7 +24,7 @@ module.exports.createCard = (req, res) => {
     })
     .catch((err) => {
       const ERROR_CODE = 400;
-      if (err.name === 'CastError') {
+      if (err.name === 'ValidationError') {
         return res.status(ERROR_CODE).send({ message: 'Invalid data' });
       } return res.status(500).send({ message: 'Error' });
     });
