@@ -1,17 +1,32 @@
 const Card = require('../models/card');
 
-module.exports.getCards = (req, res) => {
-  Card.find({})
-    .then((data) => { res.send(data); })
-    .catch((err) => {
-      const ERROR_CODE = 400;
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Invalid data' });
-      } return res.status(500).send({ message: 'Error' });
+module.exports.addLike = (req, res, next) => {
+  Card.findByIdAndUpdate(
+    req.params.id,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .then((card) => {
+      if (!card) {
+        const err = new Error('Card not found');
+        err.statusCode = 404;
+        next(err);
+      } res.send({ data: card });
+    })
+    .catch((e) => {
+      if (e.name === 'CastError') {
+        const err = new Error('Invalid data');
+        err.statusCode = 400;
+        next(err);
+      } else {
+        const err = new Error('Error');
+        err.statusCode = 500;
+        next(err);
+      }
     });
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   const createdAt = Date.now();
@@ -22,49 +37,50 @@ module.exports.createCard = (req, res) => {
     .then((card) => {
       res.send({ data: card });
     })
-    .catch((err) => {
-      const ERROR_CODE = 400;
-      if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE).send({ message: 'Invalid data' });
-      } return res.status(500).send({ message: 'Error' });
+    .catch((e) => {
+      if (e.name === 'ValidationError') {
+        const err = new Error('Invalid data');
+        err.statusCode = 400;
+        next(err);
+      } else {
+        const err = new Error('Error');
+        err.statusCode = 500;
+        next(err);
+      }
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   Card.findByIdAndRemove({ _id: req.params.id })
     .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Card not found' });
-      } res.send({ data: card });
+      if (card) {
+        if (req.user._id === card.owner._id.toString()) {
+          res.send({ data: card });
+        } else {
+          const err = new Error('Invalid data');
+          err.statusCode = 403;
+          next(err);
+        }
+      } else {
+        const err = new Error('Invalid data');
+        err.statusCode = 404;
+        next(err);
+      }
     })
-    .catch((err) => {
-      const ERROR_CODE = 400;
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Invalid data' });
-      } return res.status(500).send({ message: 'Error' });
+    .catch((e) => {
+      if (e.name === 'CastError') {
+        const err = new Error('Invalid data');
+        err.statusCode = 400;
+        next(err);
+      } else {
+        const err = new Error('Error');
+        err.statusCode = 500;
+        next(err);
+      }
     });
 };
 
-module.exports.addLike = (req, res) => {
-  Card.findByIdAndUpdate(
-    req.params.id,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Card not found' });
-      } res.send({ data: card });
-    })
-    .catch((err) => {
-      const ERROR_CODE = 400;
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Invalid data' });
-      } return res.status(500).send({ message: 'Error' });
-    });
-};
-
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.id,
     { $pull: { likes: req.user._id } },
@@ -72,13 +88,36 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Card not found' });
+        const err = new Error('Card not found');
+        err.statusCode = 404;
+        next(err);
       } res.send({ data: card });
     })
-    .catch((err) => {
-      const ERROR_CODE = 400;
-      if (err.name === 'CastError') {
-        return res.status(ERROR_CODE).send({ message: 'Invalid data' });
-      } return res.status(500).send({ message: 'Error' });
+    .catch((e) => {
+      if (e.name === 'CastError') {
+        const err = new Error('Invalid data');
+        err.statusCode = 400;
+        next(err);
+      } else {
+        const err = new Error('Error');
+        err.statusCode = 500;
+        next(err);
+      }
+    });
+};
+
+module.exports.getCards = (req, res, next) => {
+  Card.find({})
+    .then((data) => { res.send(data); })
+    .catch((e) => {
+      if (e.name === 'CastError') {
+        const err = new Error('Invalid data');
+        err.statusCode = 400;
+        next(err);
+      } else {
+        const err = new Error('Error');
+        err.statusCode = 500;
+        next(err);
+      }
     });
 };
