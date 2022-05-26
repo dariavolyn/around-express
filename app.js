@@ -15,7 +15,7 @@ const auth = require('./middlewares/auth');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
-mongoose.connect('mongodb://localhost:27017/aroundb', {
+mongoose.connect('mongodb+srv://admin:adminPassword@cluster0.6hf5ju2.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
