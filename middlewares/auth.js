@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, 'bebe');
+    payload = jwt.verify(token, 'dev-secret');
   } catch (e) {
     console.log(e);
     const err = new Error('Authorization required 2');
