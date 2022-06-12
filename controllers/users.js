@@ -31,7 +31,7 @@ module.exports.createUser = (req, res, next) => {
 };
 
 module.exports.getProfile = (req, res, next) => {
-  User.find({ _id: req.params.id })
+  User.findById({ _id: req.user._id })
     .then((user) => {
       if (!user) {
         return res.status(404).send('User ID not found');

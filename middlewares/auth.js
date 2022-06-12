@@ -8,19 +8,19 @@ module.exports = (req, res, next) => {
     const err = new Error('Authorization required 1');
     err.statusCode = 401;
     next(err);
+  } else {
+    const token = authorization.replace('Bearer ', '');
+    let payload;
+
+    try {
+      payload = jwt.verify(token, 'dev-secret');
+    } catch (e) {
+      const err = new Error('Authorization required 2');
+      err.statusCode = 401;
+      next(err);
+    }
+    req.user = payload;
+
+    next();
   }
-
-  const token = authorization.replace('Bearer ', '');
-  let payload;
-
-  try {
-    payload = jwt.verify(token, 'dev-secret');
-  } catch (e) {
-    const err = new Error('Authorization required 2');
-    err.statusCode = 401;
-    next(err);
-  }
-  req.user = payload;
-
-  next();
 };

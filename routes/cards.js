@@ -1,5 +1,5 @@
 const express = require('express');
-const isURL = require('validator/lib/isURL');
+// const isURL = require('validator/lib/isURL');
 const { celebrate, Joi } = require('celebrate');
 
 const router = express.Router();
@@ -8,21 +8,25 @@ const {
   getCards, createCard, deleteCard, addLike, dislikeCard,
 } = require('../controllers/cards');
 
-function validateUrl(string) {
-  return isURL(string);
-}
+// function validateUrl(string) {
+//   if (isURL(string) === true) {
+//     return string;
+//   }
+// }
+// celebrate({
+//   body: Joi.object().keys({
+//     link: Joi.string().required(),
+//     name: Joi.string().required(),
+//   }),
+// }),
+
 router.put('/:id/likes', celebrate({
   params: Joi.object().keys({
     id: Joi.string().length(24).hex(),
   }),
 }), addLike);
 
-router.post('/', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    link: Joi.string().required().custom(validateUrl),
-  }),
-}), createCard);
+router.post('/', createCard);
 
 router.delete('/:id', celebrate({
   params: Joi.object().keys({

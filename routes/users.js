@@ -1,5 +1,4 @@
 const express = require('express');
-const isURL = require('validator/lib/isURL');
 const { celebrate, Joi } = require('celebrate');
 
 const router = express.Router();
@@ -8,17 +7,9 @@ const {
   getUsers, createUser, getProfile, patchUser, patchAvatar,
 } = require('../controllers/users');
 
-function validateUrl(string) {
-  return isURL(string);
-}
+router.get('/users/me', getUsers);
 
-router.get('/', getUsers);
-
-router.get('/:id', celebrate({
-  params: Joi.object().keys({
-    id: Joi.string().length(24).hex(),
-  }),
-}), getProfile);
+router.get('/:id', getProfile);
 
 router.post('/', celebrate({
   body: Joi.object().keys({
@@ -37,10 +28,6 @@ router.patch('/me', celebrate({
   }),
 }), patchUser);
 
-router.patch('/me/avatar', celebrate({
-  body: Joi.object().keys({
-    avatar: Joi.string().custom(validateUrl),
-  }),
-}), patchAvatar);
+router.patch('/me/avatar', patchAvatar);
 
 module.exports = router;

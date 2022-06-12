@@ -17,9 +17,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: (v) => {
-        const regexp = /^((http:\/\/)|(https:\/\/))(www\.)?[.-_~:/?%#[\]@!$&'()*+,;=\w]+\.[\w]#?/gm;
-        return regexp.test(v);
+        const regexp = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gm;
+        regexp.test(v);
       },
+      message: 'Not valid URL',
     },
   },
   email: {
